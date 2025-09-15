@@ -1,0 +1,27 @@
+package rules.gearBox;
+
+import com.ftn.model.GearBox
+
+rule "Gear up if RPM high"
+    when
+        $gb : GearBox(currentRPM > 2500 && currentGear != 6)
+    then
+        modify($gb){setState(GearBox.State.UP)};
+        System.out.println("Shift gear UP");
+end
+
+rule "Gear down if RPM low"
+    when
+        $gb : GearBox(currentRPM < 1100 && currentGear != 1)
+    then
+        modify($gb){setState(GearBox.State.DOWN)};
+        System.out.println("Shift gear DOWN");
+end
+
+rule "No notification RPM right"
+    when
+        $gb : GearBox(currentRPM >= 1100 && currentRPM <= 2500)
+    then
+        modify($gb){setState(GearBox.State.OK)};
+        System.out.println("Shift gear right");
+end

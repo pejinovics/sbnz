@@ -2,4 +2,7 @@
     <kbase name="airCondition" packages="airCondition">
         <ksession name="airConditionKsession"/>
     </kbase>
+    <kbase name="gearBox" packages="gearBox">
+        <ksession name="gearBoxKsession"/>
+    </kbase>
 </kmodule>

@@ -31,7 +31,7 @@ public class Application implements CommandLineRunner {
 	{
 
 		AirConditionTest.main();
-		
+		GearBoxTest.main();
 	}
 
 }
