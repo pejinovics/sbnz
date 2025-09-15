@@ -7,8 +7,6 @@ when
     $ac : AirCondition(measuredTemp > desiredTemp) // && state != AirCondition.State.COOL
 then
     modify($ac){setState(AirCondition.State.COOL)}
-//    $ac.setState(AirCondition.State.COOL);
-//    update($ac);
     System.out.println("Cooling turned ON");
 end
 
@@ -17,8 +15,6 @@ when
     $ac : AirCondition(measuredTemp < desiredTemp)
 then
     modify($ac){setState(AirCondition.State.HEAT)}
-//    $ac.setState(AirCondition.State.HEAT);
-//    update($ac);
     System.out.println("Heating turned ON");
 end
 
@@ -27,8 +23,6 @@ when
     $ac : AirCondition(measuredTemp == desiredTemp)
 then
     modify($ac){setState(AirCondition.State.OFF)}
-//    $ac.setState(AirCondition.State.OFF);
-//    update($ac);
     System.out.println("Heating and cooling turned OFF");
 end
 
