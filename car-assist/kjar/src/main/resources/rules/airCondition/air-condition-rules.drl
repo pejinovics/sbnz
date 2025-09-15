@@ -1,0 +1,32 @@
+package rules.airCondition
+
+import com.ftn.model.AirCondition;
+
+rule "Cool if too hot"
+when
+    $ac : AirCondition(measuredTemp > desiredTemp) // && state != AirCondition.State.COOL
+then
+    $ac.setState(AirCondition.State.COOL);
+    update($ac);
+    System.out.println("Cooling turned ON");
+end
+
+rule "Heat if too cold"
+when
+    $ac : AirCondition(measuredTemp < desiredTemp)
+then
+    $ac.setState(AirCondition.State.HEAT);
+    update($ac);
+    System.out.println("Heating turned ON");
+end
+
+rule "Turn off if just right"
+when
+    $ac : AirCondition(measuredTemp == desiredTemp)
+then
+    $ac.setState(AirCondition.State.OFF);
+    update($ac);
+    System.out.println("Heating and cooling turned OFF");
+end
+
+
