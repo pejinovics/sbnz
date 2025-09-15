@@ -6,8 +6,9 @@ rule "Cool if too hot"
 when
     $ac : AirCondition(measuredTemp > desiredTemp) // && state != AirCondition.State.COOL
 then
-    $ac.setState(AirCondition.State.COOL);
-    update($ac);
+    modify($ac){setState(AirCondition.State.COOL)}
+//    $ac.setState(AirCondition.State.COOL);
+//    update($ac);
     System.out.println("Cooling turned ON");
 end
 
@@ -15,8 +16,9 @@ rule "Heat if too cold"
 when
     $ac : AirCondition(measuredTemp < desiredTemp)
 then
-    $ac.setState(AirCondition.State.HEAT);
-    update($ac);
+    modify($ac){setState(AirCondition.State.HEAT)}
+//    $ac.setState(AirCondition.State.HEAT);
+//    update($ac);
     System.out.println("Heating turned ON");
 end
 
@@ -24,8 +26,9 @@ rule "Turn off if just right"
 when
     $ac : AirCondition(measuredTemp == desiredTemp)
 then
-    $ac.setState(AirCondition.State.OFF);
-    update($ac);
+    modify($ac){setState(AirCondition.State.OFF)}
+//    $ac.setState(AirCondition.State.OFF);
+//    update($ac);
     System.out.println("Heating and cooling turned OFF");
 end
 
