@@ -1,0 +1,41 @@
+<kmodule xmlns="http://www.drools.org/xsd/kmodule" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <kbase name="rules" packages="rules/com.ftn">
+		<ksession name="k-session"/>
+	</kbase>
+	<kbase name="ruless" packages="rules/rules">
+        <ksession name="ksession-rules"/>
+    </kbase>
+    <kbase name="agendaGroup" packages="rules/rules2">
+        <ksession name="agendaRules"/>
+    </kbase>
+    
+    <kbase name="declared" packages="rules/declaredTypes">
+        <ksession name="declared-types"/>
+    </kbase>
+    
+    <kbase name="propertyreactive" packages="rules/propertyReactive">
+        <ksession name="propertyReactiveKsession"/>
+    </kbase>
+    
+    <kbase name="collectKBase" packages="rules/collectRules">
+        <ksession name="collectKsession"/>
+    </kbase>
+    
+    <kbase name="accumulateKBase" packages="rules/accumRules">
+        <ksession name="accumKsession"/>
+    </kbase>
+    
+    <kbase name="condKBase" packages="rules/conditionalElements">
+        <ksession name="condElemsKsession"/>
+    </kbase>
+    
+    <kbase name="traitsKBase" packages="rules/traits">
+        <ksession name="traitsKsession"/>
+    </kbase>
+    
+    <kbase name="debuggKBase" packages="rules/matchCanceled">
+        <ksession name="matchCancelledKsession"/>
+    </kbase>
+    
+</kmodule>

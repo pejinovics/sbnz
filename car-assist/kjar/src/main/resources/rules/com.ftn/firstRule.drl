@@ -1,0 +1,19 @@
+package rules.com.ftn
+// list any import classes here
+
+// declare any global viriables here
+
+rule "Your first rule"
+    when
+        //conditions
+    then
+        //action
+end
+
+rule "Your second rule"
+    //include attributes such as "salience" here...
+    when
+        //conditions
+    then
+        //action
+end
