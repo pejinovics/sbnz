@@ -1,0 +1,13 @@
+template header
+currentGear
+currentRPM
+
+package rules.gearBox;
+
+template "gear-box"
+
+rule "gear-box-template"
+    when
+
+    then
+end
