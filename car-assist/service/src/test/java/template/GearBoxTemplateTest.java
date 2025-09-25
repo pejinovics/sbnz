@@ -4,7 +4,6 @@ import com.ftn.model.GearBox;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.drools.template.objects.ArrayDataProvider;
-import org.drools.template.parser.RuleTemplate;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -32,7 +31,11 @@ public class GearBoxTemplateTest {
 
         System.out.println(drl);
 
-        KieSession kieSession = this.createKieSessionFromDRL(drl);
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+
+        KieSession kieSession = kieHelper.build().newKieSession();
+
 
         this.doTest(kieSession);
 

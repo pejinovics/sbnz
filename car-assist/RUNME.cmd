@@ -16,4 +16,4 @@ start cmd /k "cd service && echo 'Building Service' && mvn clean package"
 
 echo Service build in process...
 echo All builds launched!
-pause
+

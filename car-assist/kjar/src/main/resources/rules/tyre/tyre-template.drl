@@ -1,0 +1,12 @@
+template header
+pressure
+season
+side
+
+package  rules.tyre
+
+import com.ftn.model.Tyre
+
+template "tyre-pressure"
+
+rule "@{side} @{season} "
