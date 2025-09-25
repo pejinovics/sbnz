@@ -5,4 +5,7 @@
     <kbase name="gearBox" packages="gearBox">
         <ksession name="gearBoxKsession"/>
     </kbase>
+    <kbase name="backward" packages="backward">
+        <ksession name="backwardKsession"/>
+    </kbase>
 </kmodule>

@@ -29,8 +29,9 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception 
 	{
-		AirConditionTest.main();
-		GearBoxTest.main();
+//		AirConditionTest.main();
+//		GearBoxTest.main();
+		ComponentTest.main();
 	}
 
 }
