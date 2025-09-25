@@ -1,0 +1,28 @@
+template header
+minRpm
+maxRpm
+newGear
+
+package rules.gearBox;
+
+import com.ftn.model.GearBox;
+
+template "gear-box"
+
+rule "Shift up to @{newGear}"
+    when
+        $gb : GearBox(currentRPM > @{maxRpm} && currentGear + 1 == @{newGear})
+    then
+        modify($gb){setCurrentGear(@{newGear}), setCurrentRPM($gb.getCurrentRPM() * 0.8)}
+        System.out.println("Shift gear Up to @{newGear}");
+end
+
+rule "Shift down to @{newGear}"
+    when
+        $gb: GearBox(currentRPM < @{minRpm} && currentGear - 1 == @{newGear})
+    then
+        modify($gb){setCurrentGear(@{newGear}), setCurrentRPM($gb.getCurrentRPM() * 1.25)}
+        System.out.println("Shift gear Down to @{newGear}");
+end
+
+end template
