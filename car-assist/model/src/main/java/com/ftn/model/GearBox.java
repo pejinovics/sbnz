@@ -33,6 +33,8 @@ public class GearBox {
         this.currentRPM = currentRPM;
     }
 
+    public void setCurrentRPM(double currentRPM) { this.currentRPM = (int) currentRPM; }
+
     public State getState() {
         return state;
     }

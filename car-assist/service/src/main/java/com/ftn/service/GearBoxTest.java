@@ -6,6 +6,8 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
+import java.io.InputStream;
+
 public class GearBoxTest {
 
     public static void main(){

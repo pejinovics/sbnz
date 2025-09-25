@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
@@ -32,6 +33,8 @@ public class Application implements CommandLineRunner {
 //		AirConditionTest.main();
 //		GearBoxTest.main();
 		ComponentTest.main();
+//		GearBoxTest.main();
+
 	}
 
 }
