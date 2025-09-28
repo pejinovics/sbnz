@@ -1,0 +1,74 @@
+package backward;
+dialect  "mvel"
+import com.ftn.model.Component;
+
+query hasFault(String x, String y)
+    Component(x, y;)
+    or
+    ( Component(z, y;) and hasFault(x, z;) )
+end
+
+
+rule "go" salience 10
+when
+    $s : String(  )
+then
+    System.out.println( $s );
+end
+
+
+rule "Pravilo: Sistem zdrav"
+when
+    String( this == "Pravilo: Sistem zdrav" )
+    not hasFault("false", "Motorni sistem"; )
+then
+    System.out.println( "Motorni sistem je zdrav" );
+end
+
+
+rule "Pravilo: Sistem u kvaru"
+when
+    String( this == "Pravilo: Sistem u kvaru" )
+    hasFault("false", "Motorni sistem"; )
+then
+    System.out.println( "Motorni sistem je u kvaru" );
+end
+
+
+query isContainedIn( String x, String y )
+  Component( x, y; )
+  or
+  ( Component( z, y; ) and Component( x, z; ) )
+end
+
+
+rule "Pravilo: Prikaz sistema"
+when
+    String(this == "Pravilo: Prikaz sistema")
+    isContainedIn($thing, $component;)
+    eval(!($thing.equals("true") || $thing.equals("false")))
+then
+    System.out.println($thing + " je deo " + $component);
+end
+
+rule "Pravilo: Proveri Napajanje gorivom"
+when
+    String( this == "Pravilo: Proveri Napajanje gorivom" )
+    isContainedIn("MAF-protok vazduha", "Napajanje gorivom"; )
+then
+    System.out.println( "MAF-protok vazduha je deo Napajanja gorivom" );
+end
+
+rule "Pravilo: Napajanje gorivom"
+when
+    String( this == "Pravilo: Napajanje gorivom" )
+    isContainedIn($thing, "Napajanje gorivom"; )
+    eval(!($thing.equals("true") || $thing.equals("false")))
+then
+    System.out.println($thing + " je deo Napajanja gorivom" );
+end
+
+
+
+
+

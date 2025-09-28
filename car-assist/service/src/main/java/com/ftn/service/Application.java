@@ -30,9 +30,10 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception 
 	{
-		AirConditionTest.main();
+//		AirConditionTest.main();
 //		GearBoxTest.main();
-
+		ComponentTest.main();
+//		GearBoxTest.main();
 
 	}
 
