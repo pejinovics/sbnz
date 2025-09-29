@@ -5,44 +5,46 @@ import org.kie.api.definition.type.PropertyReactive;
 @PropertyReactive
 public class Tyre {
 
-    public enum Season {
-        WINTER,
-        SUMMER,
-        ALLSEASON
-    }
-
-    public enum Side {
-        FRONT,
-        REAR
-    }
+//    public static enum Season {
+//        WINTER,
+//        SUMMER,
+//        ALLSEASON
+//    }
+//
+//    public static enum Side {
+//        FRONT_LEFT,
+//        FRONT_RIGHT,
+//        REAR_LEFT,
+//        REAR_RIGHT
+//    }
 
 //    public enum Side {}
 
-    private Double preassure;
+    private Double pressure;
 
-    private Season season;
+    private TyreSeason season;
 
-    private Side side;
+    private TyreSide side;
 
-    public Tyre(Double pressure, Season season, Side side) {
-        this.preassure = pressure;
+    public Tyre(Double pressure, TyreSeason season, TyreSide side) {
+        this.pressure = pressure;
         this.season = season;
         this.side = side;
     }
 
-    public Season getSeason() {
+    public TyreSeason getSeason() {
         return season;
     }
 
-    public Side getSide() {
+    public TyreSide getSide() {
         return side;
     }
 
-    public Double getPreassure() {
-        return preassure;
+    public Double getPressure() {
+        return pressure;
     }
 
-    public void setPreassure(Double preassure) {
-        this.preassure = preassure;
+    public void setPressure(Double pressure) {
+        this.pressure = pressure;
     }
 }
