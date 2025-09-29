@@ -16,14 +16,14 @@ rule "A @{side} @{season} tyre pressure low"
     when
         $ty : Tyre(getSeason() == TyreSeason.@{season}, getSide() == TyreSide.@{side}, pressure < @{min_pressure})
     then
-        System.out.printf("Inflate @{side} %s tyre", $ty.getSide());
+        System.out.printf("Inflate @{side} %s tyre\n", $ty.getSide());
 end
 
 rule "A @{side} @{season} tyre pressure high"
     when
         $ty : Tyre(season == TyreSeason.@{season}, side == TyreSide.@{side}, pressure > @{max_pressure})
     then
-        System.out.printf("Deflate @{side} %s tyre", $ty.getSide());
+        System.out.printf("Deflate @{side} %s tyre\n", $ty.getSide());
 end
 
 end template

@@ -24,9 +24,9 @@ public class TyrePressureTemplateTest {
     DataProviderCompiler converter = new DataProviderCompiler();
     String drl = converter.compile(dataProvider, template);
 
-    System.out.println(drl);
-
     KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRL(drl);
+
+    doTest(kieSession);
 
     }
 
@@ -46,11 +46,17 @@ public class TyrePressureTemplateTest {
         System.out.println("-------------------------------");
 
         kieSession.fireAllRules();
-        front_right_tyre.setPressure(1.8);
-        kieSession.fireAllRules();
 
-        front_right_tyre.setPressure(3.4);
+        System.out.println("-------------------------------");
+        front_left_tyre.setPressure(1.8);
+        kieSession.update(handle, front_left_tyre);
         kieSession.fireAllRules();
+        System.out.println("-------------------------------");
 
+        System.out.println("-------------------------------");
+        front_left_tyre.setPressure(3.4);
+        kieSession.update(handle, front_left_tyre);
+        kieSession.fireAllRules();
+        System.out.println("-------------------------------");
     }
 }
