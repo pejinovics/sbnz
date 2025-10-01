@@ -5,21 +5,6 @@ import org.kie.api.definition.type.PropertyReactive;
 @PropertyReactive
 public class Tyre {
 
-//    public static enum Season {
-//        WINTER,
-//        SUMMER,
-//        ALLSEASON
-//    }
-//
-//    public static enum Side {
-//        FRONT_LEFT,
-//        FRONT_RIGHT,
-//        REAR_LEFT,
-//        REAR_RIGHT
-//    }
-
-//    public enum Side {}
-
     private Double pressure;
 
     private TyreSeason season;

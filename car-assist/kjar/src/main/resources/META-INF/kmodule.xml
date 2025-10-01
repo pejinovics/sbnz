@@ -8,4 +8,7 @@
     <kbase name="backward" packages="backward">
         <ksession name="backwardKsession"/>
     </kbase>
+    <kbase name="fuelConsumption" eventProcessingMode="stream" packages="fuelConsumption">
+        <ksession name="fuelConsumptionKSession" type="stateful"/>
+    </kbase>
 </kmodule>
