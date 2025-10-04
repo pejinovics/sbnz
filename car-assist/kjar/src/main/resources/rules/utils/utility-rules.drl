@@ -1,0 +1,10 @@
+package rules.utils;
+
+import com.ftn.model.events.TriggerEvent
+
+rule "Delete processed triggers"
+    when
+        $te : TriggerEvent(processed == true)
+    then
+        delete($te);
+end

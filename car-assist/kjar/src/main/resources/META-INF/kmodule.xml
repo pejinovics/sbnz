@@ -11,4 +11,7 @@
     <kbase name="fuelConsumption" eventProcessingMode="stream" packages="fuelConsumption">
         <ksession name="fuelConsumptionKSession" type="stateful"/>
     </kbase>
+    <kbase name="lineAssist" packages="lineAssist" eventProcessingMode="stream">
+        <ksession name="lineAssistKSession" type="stateful"/>
+    </kbase>
 </kmodule>

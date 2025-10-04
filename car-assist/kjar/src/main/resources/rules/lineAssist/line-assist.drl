@@ -1,0 +1,65 @@
+package rules.lineAssist;
+
+import com.ftn.model.DriveSystem
+import com.ftn.model.SurroundSystem
+import com.ftn.model.events.TriggerEvent
+import com.ftn.model.events.TriggerType
+import com.ftn.model.events.CurrentSpeedEvent
+
+global Double minDistance;
+global Double minLineWarnSpeed;
+global Double minLineSteerSpeed;
+
+
+rule "Left line too close"
+    when
+        $ss : SurroundSystem(lineVisible == true && leftLineDistance < minDistance)
+    then
+        System.out.println("Left line too close");
+        insert(new TriggerEvent(TriggerType.LEFT_LINE));
+end
+
+rule "Right line too close"
+    when
+        $ss : SurroundSystem(lineVisible == true && rightLineDistance < minDistance)
+    then
+        insert(new TriggerEvent(TriggerType.RIGHT_LINE));
+end
+
+rule "Line close, check left turn signal"
+    when
+        $te : TriggerEvent(type == TriggerType.LEFT_LINE)
+        $ds : DriveSystem(leftTurnSignal == false)
+    then
+        System.out.println("Line close, check left turn signal");
+        delete($te);
+        insert(new TriggerEvent(TriggerType.LINE_ASSIST));
+end
+
+rule "Left turn signal off, check speed for warning"
+    when
+        $speed : Double() from accumulate(
+            CurrentSpeedEvent($s: currentSpeed)
+            over window: length(1), sum($s)
+        )
+        $te : TriggerEvent(type == TriggerType.LINE_ASSIST)
+        eval($speed > minLineWarnSpeed && $speed < minLineSteerSpeed)
+    then
+        delete($te);
+        System.out.println("Warning, watch left lane");
+end
+
+rule "left turn signal off, check speed for steering"
+    when
+        $speed : Double() from accumulate(
+            CurrentSpeedEvent($s : currentSpeed)
+            over window: length(1), sum($s)
+        )
+        $te : TriggerEvent(type == TriggerType.LINE_ASSIST)
+        eval($speed >= minLineSteerSpeed)
+    then
+        delete($te);
+        System.out.println("Steering wheel to the right!");
+end
+
+
