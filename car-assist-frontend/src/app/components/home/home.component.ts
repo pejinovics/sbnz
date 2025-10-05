@@ -27,7 +27,9 @@ export class HomeComponent implements OnInit {
 
   simulations = [
     { label: 'Air Condition', value: 'aircondition' },
+    { label: 'Door System', value: 'doorsystem' },
     { label: 'Motor System', value: 'motorsystem' },
+    { label: 'HVAC System', value: 'hvacsystem' },
     { label: 'Tyre Pressure', value: 'tyrepressure' },
     { label: 'Gear Box', value: 'gearbox' },
     { label: 'Fuel Consumption (CEP)', value: 'fuelconsumption' },
@@ -44,9 +46,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.wsService.subscribeToTopic('/topic/rules').subscribe((msg) => {
       const parsed = JSON.parse(msg);
+
+      if (parsed.facts && Array.isArray(parsed.facts) && parsed.facts.length > 0 && Array.isArray(parsed.facts[0])) {
+        parsed.facts = parsed.facts[0];
+      }
+
       this.firedRules.unshift(parsed);
     });
   }
+
 
 
   startSimulation() {
@@ -68,5 +76,14 @@ export class HomeComponent implements OnInit {
   isStoppable(): boolean {
     return ['lineassist', 'brakeassist', 'fuelconsumption'].includes(this.selectedSimulation);
   }
+
+  objectKeys(obj: any): string[] {
+    return obj ? Object.keys(obj) : [];
+  }
+
+  isPrimitive(value: any): boolean {
+    return value !== Object(value);
+  }
+
 
 }

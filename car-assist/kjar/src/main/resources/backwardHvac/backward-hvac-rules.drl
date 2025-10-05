@@ -1,0 +1,74 @@
+package backwardHvac;
+dialect  "mvel"
+import com.ftn.model.Component;
+
+query hasFault(String x, String y)
+    Component(x, y;)
+    or
+    ( Component(z, y;) and hasFault(x, z;) )
+end
+
+
+rule "go" salience 10
+when
+    $s : String(  )
+then
+    System.out.println( $s );
+end
+
+
+rule "Pravilo: Sistem zdrav (HVAC)"
+when
+    String( this == "Pravilo: Sistem zdrav (HVAC)" )
+    not hasFault("false", "Klima i ventilacija (HVAC)"; )
+then
+    System.out.println( "Klima i ventilacija (HVAC) je zdrav" );
+end
+
+
+rule "Pravilo: Sistem u kvaru (HVAC)"
+when
+    String( this == "Pravilo: Sistem u kvaru (HVAC)" )
+    hasFault("false", "Klima i ventilacija (HVAC)"; )
+then
+    System.out.println( "Klima i ventilacija (HVAC) je u kvaru" );
+end
+
+
+query isContainedIn( String x, String y )
+  Component( x, y; )
+  or
+  ( Component( z, y; ) and Component( x, z; ) )
+end
+
+
+rule "Pravilo: Prikaz sistema"
+when
+    String(this == "Pravilo: Prikaz sistema")
+    isContainedIn($thing, $component;)
+    eval(!($thing.equals("true") || $thing.equals("false")))
+then
+    System.out.println($thing + " je deo " + $component);
+end
+
+rule "Pravilo: Proveri Distribucija vazduha"
+when
+    String( this == "Pravilo: Proveri Distribucija vazduha" )
+    isContainedIn("Ventilator kondenzatora", "Distribucija vazduha"; )
+then
+    System.out.println( "Ventilator kondenzatora je deo Distribucije vazduha" );
+end
+
+rule "Pravilo: Distribucija vazduha"
+when
+    String( this == "Pravilo: Distribucija vazduha" )
+    isContainedIn($thing, "Distribucija vazduha"; )
+    eval(!($thing.equals("true") || $thing.equals("false")))
+then
+    System.out.println($thing + " je deo Distribucije vazduha" );
+end
+
+
+
+
+

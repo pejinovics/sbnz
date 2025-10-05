@@ -20,17 +20,49 @@
   <div class="rules-panel" *ngIf="firedRules.length > 0; else noData">
     <div *ngFor="let r of firedRules" class="rule-box">
       <h3>{{ r.ruleName }}</h3>
-      <ul>
-        <li *ngFor="let f of r.facts">
-          <pre>{{ f | json }}</pre>
-        </li>
-<!--        <li *ngFor="let f of r.facts">-->
-<!--          <b>{{ f.type }}</b> → {{ f.details | json }}-->
-<!--        </li>-->
-      </ul>
+
+
+      <div *ngIf="r.ruleName.includes('Sistem')">
+        <p><b>Status:</b> {{ r.facts[0]?.details }}</p>
+      </div>
+
+      <div *ngIf="r.ruleName.includes('Prikaz sistema') ||
+             r.ruleName.includes('Napajanje') ||
+             r.ruleName.includes('Distribucija vazduha')">
+        <ul>
+          <li *ngFor="let f of r.facts">
+            {{ f.details }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- OSTALA pravila -->
+      <div class="fact-list"
+           *ngIf="!(r.ruleName.includes('Sistem') ||
+              r.ruleName.includes('Prikaz sistema') ||
+              r.ruleName.includes('Napajanje') ||
+              r.ruleName.includes('Distribucija vazduha'))">
+        <div *ngFor="let f of r.facts; let i = index" class="fact-item">
+          <b>Fact {{ i + 1 }}:</b>
+          <div *ngIf="f.type">
+            <span class="fact-type">{{ f.type }}</span>
+          </div>
+          <div *ngIf="f.details && (f.details | json) !== '{}'">
+            <div *ngIf="f.details | json as det">
+              <span *ngIf="isPrimitive(f.details)">Value: {{ f.details }}</span>
+              <div *ngIf="!isPrimitive(f.details)">
+                <div *ngFor="let key of objectKeys(f.details)">
+                  • <b>{{ key }}:</b> {{ f.details[key] }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
+
 
   <ng-template #noData>
     <p class="no-data">No activated rules.</p>
