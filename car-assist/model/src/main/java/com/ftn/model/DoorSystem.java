@@ -1,15 +1,43 @@
 package com.ftn.model;
 
 public class DoorSystem {
-    private boolean[] windowsUp;
+    private boolean[] windowsClosed;
     private boolean[] doorsClosed;
-    private boolean locked;
+    private boolean keyPressed;
 
     public DoorSystem() {
-        windowsUp = new boolean[]{true, true, true, true};
-        doorsClosed = new boolean[]{true, true, true, true};
-        locked = true;
+        doorsClosed = new boolean[]{true, true, true, true};        // front left, front right, rear left, rear right
+        windowsClosed = new boolean[]{true, true, true, true};
+        keyPressed = false;
     }
-    //TODO nacin dizanja i spustanja prozora
-    // nacin na koji ce se postavljati vrednosti, mozda ni ne mora da bude ovako primitivno implementirano
+
+    public boolean isKeyPressed() {
+        return keyPressed;
+    }
+
+    public void setKeyPressed(boolean keyPressed) {
+        this.keyPressed = keyPressed;
+    }
+
+    public void setDoor(Side side, boolean closed) {
+        int index = side.ordinal();
+        doorsClosed[index] = closed;
+    }
+    public void setWindow(Side side, boolean up) {
+        int index = side.ordinal();
+        windowsClosed[index] = up;
+    }
+    public int getOpenDoorIndex() {
+        for (int index = 0; index < doorsClosed.length; index++) {
+            if (!doorsClosed[index]) return index;
+        }
+        return -1;
+    }
+    public int getOpenWindowIndex() {
+        for (int index = 0; index < windowsClosed.length; index++) {
+            if(!windowsClosed[index]) return index;
+        }
+        return -1;
+    }
+
 }

@@ -9,9 +9,9 @@ public class Tyre {
 
     private TyreSeason season;
 
-    private TyreSide side;
+    private Side side;
 
-    public Tyre(Double pressure, TyreSeason season, TyreSide side) {
+    public Tyre(Double pressure, TyreSeason season, Side side) {
         this.pressure = pressure;
         this.season = season;
         this.side = side;
@@ -21,7 +21,7 @@ public class Tyre {
         return season;
     }
 
-    public TyreSide getSide() {
+    public Side getSide() {
         return side;
     }
 

@@ -1,0 +1,38 @@
+<div class="home-container">
+  <h1>Car Assist Simulation</h1>
+
+  <div class="simulation-controls">
+    <select [(ngModel)]="selectedSimulation">
+      <option *ngFor="let s of simulations" [value]="s.value">
+        {{ s.label }}
+      </option>
+    </select>
+
+    <button (click)="startSimulation()">Start simulation</button>
+    <button
+      (click)="stopSimulation()"
+      [disabled]="!isStoppable()"
+      class="stop-btn">
+      Stop
+    </button>
+  </div>
+
+  <div class="rules-panel" *ngIf="firedRules.length > 0; else noData">
+    <div *ngFor="let r of firedRules" class="rule-box">
+      <h3>{{ r.ruleName }}</h3>
+      <ul>
+        <li *ngFor="let f of r.facts">
+          <pre>{{ f | json }}</pre>
+        </li>
+<!--        <li *ngFor="let f of r.facts">-->
+<!--          <b>{{ f.type }}</b> → {{ f.details | json }}-->
+<!--        </li>-->
+      </ul>
+
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p class="no-data">No activated rules.</p>
+  </ng-template>
+</div>

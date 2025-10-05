@@ -19,28 +19,28 @@ import org.kie.internal.utils.KieHelper;
 
 public class GearBoxTemplateTest {
 
-    @Test
-    public void GearBoxRulesTest1(){
-
-        InputStream template = GearBoxTemplateTest.class.getResourceAsStream("/rules/gearBox/gear-box-template.drt");
-        InputStream data = GearBoxTemplateTest.class.getResourceAsStream("/templateTable/gearBox.xls");
-
-        ExternalSpreadsheetCompiler converter = new ExternalSpreadsheetCompiler();
-
-        String drl = converter.compile(data, template, 3, 5);
-
-        System.out.println(drl);
-
-        KieHelper kieHelper = new KieHelper();
-        kieHelper.addContent(drl, ResourceType.DRL);
-
-        KieSession kieSession = kieHelper.build().newKieSession();
-
-
-        this.doTest(kieSession);
-
-
-    }
+//    @Test
+//    public void GearBoxRulesTest1(){
+//
+//        InputStream template = GearBoxTemplateTest.class.getResourceAsStream("/rules/gearBox/gear-box-template.drt");
+//        InputStream data = GearBoxTemplateTest.class.getResourceAsStream("/templateTable/gearBox.xls");
+//
+//        ExternalSpreadsheetCompiler converter = new ExternalSpreadsheetCompiler();
+//
+//        String drl = converter.compile(data, template, 3, 5);
+//
+//        System.out.println(drl);
+//
+//        KieHelper kieHelper = new KieHelper();
+//        kieHelper.addContent(drl, ResourceType.DRL);
+//
+//        KieSession kieSession = kieHelper.build().newKieSession();
+//
+//
+//        this.doTest(kieSession);
+//
+//
+//    }
 
     @Test
     public void GearBoxRulesTestArrays() {

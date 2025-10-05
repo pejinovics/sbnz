@@ -1,0 +1,25 @@
+package rules.doorSystem;
+
+import com.ftn.model.DoorSystem
+import com.ftn.model.Side
+
+rule "Not all doors closed!"
+    when
+        $ds : DoorSystem(keyPressed == true && $index : getOpenDoorIndex() != -1)
+    then
+        System.out.println(Side.values()[$index] + " door not closed.");
+end
+
+rule "Not all windows closed!"
+    when
+        $ds : DoorSystem(keyPressed == true && $index : getOpenWindowIndex() != -1)
+    then
+        System.out.println(Side.values()[$index] + " window not closed.");
+end
+
+rule "Car is locked."
+    when
+        $ds : DoorSystem(keyPressed == true && getOpenWindowIndex() == -1 && getOpenDoorIndex() == -1)
+    then
+        System.out.println("The car is closed");
+end

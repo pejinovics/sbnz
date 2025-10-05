@@ -1,8 +1,8 @@
 package template;
 
+import com.ftn.model.Side;
 import com.ftn.model.Tyre;
 import com.ftn.model.TyreSeason;
-import com.ftn.model.TyreSide;
 import com.ftn.utils.TemplateLoadingUtility;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
@@ -19,6 +19,7 @@ public class TyrePressureTemplateTest {
 
     InputStream template = TyrePressureTemplateTest.class.getResourceAsStream("/rules/tyrePressure/tyre-pressure-template.drt");
     System.out.println(System.getProperty("user.dir"));
+    System.out.println("sta god");
     DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/tyrePressure.csv");
 
     DataProviderCompiler converter = new DataProviderCompiler();
@@ -31,10 +32,10 @@ public class TyrePressureTemplateTest {
     }
 
     private void doTest(KieSession kieSession) {
-        Tyre front_left_tyre = new Tyre(2.2, TyreSeason.WINTER, TyreSide.FRONT_LEFT);
-        Tyre front_right_tyre = new Tyre(3.0, TyreSeason.WINTER, TyreSide.FRONT_RIGHT);
-        Tyre rear_left_tyre = new Tyre(2.2, TyreSeason.WINTER, TyreSide.REAR_LEFT);
-        Tyre rear_right_tyre = new Tyre(2.2, TyreSeason.WINTER, TyreSide.REAR_RIGHT);
+        Tyre front_left_tyre = new Tyre(2.2, TyreSeason.WINTER, Side.FRONT_LEFT);
+        Tyre front_right_tyre = new Tyre(3.0, TyreSeason.WINTER, Side.FRONT_RIGHT);
+        Tyre rear_left_tyre = new Tyre(2.2, TyreSeason.WINTER, Side.REAR_LEFT);
+        Tyre rear_right_tyre = new Tyre(2.2, TyreSeason.WINTER, Side.REAR_RIGHT);
 
         FactHandle handle = kieSession.insert(front_left_tyre);
         kieSession.insert(front_right_tyre);
