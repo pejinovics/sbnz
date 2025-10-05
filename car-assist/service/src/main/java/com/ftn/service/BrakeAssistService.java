@@ -3,16 +3,19 @@ package com.ftn.service;
 import com.ftn.model.DriveSystem;
 import com.ftn.model.SurroundSystem;
 import com.ftn.model.events.CurrentSpeedEvent;
+import com.ftn.utils.TemplateLoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
+import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BrakeAssistService {
@@ -50,16 +53,24 @@ public class BrakeAssistService {
             kieSession.setGlobal("dangerTTC", 10.0);
             kieSession.setGlobal("maxDangerTTC", 3.0);
 
-            SurroundSystem surroundSystem = new SurroundSystem(0.1, 0.7, true, 9.0, 1.0);
+            SurroundSystem surroundSystem = new SurroundSystem(0.7, 0.7, true, 9.0, 1.0);
             DriveSystem driveSystem = new DriveSystem(0.0, false, false, false);
-            surroundSystem.setLeftLineDistance(0.1);
 
-            kieSession.insert(surroundSystem);
-            kieSession.insert(driveSystem);
+            FactHandle surroundSystemHandle =  kieSession.insert(surroundSystem);
+            FactHandle driveSystemHandle = kieSession.insert(driveSystem);
 
             startSimulationThreads();
 
             new Thread(() -> kieSession.fireUntilHalt(), "DroolsFireThread").start();
+
+            List<Double> frontCarDistances = TemplateLoadingUtility.loadDataFromCSV("testCases/brakeAssist/frontCarDistance1.csv");
+            int size = frontCarDistances.size();
+            for (int i = size; ; i++) {
+                surroundSystem.setFrontVehicleDistance(frontCarDistances.get(i % size));
+                kieSession.update(surroundSystemHandle, surroundSystem);
+                Thread.sleep(10000);
+            }
+
 
         } catch (Throwable t) {
             t.printStackTrace();
@@ -69,11 +80,15 @@ public class BrakeAssistService {
 
     private void startSimulationThreads() {
         simulationThreadOwnCar = new Thread(() -> {
+            List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_65_to_70.csv");
+            int size = ownCarSpeed.size();
+            int i = size;
             while (running) {
                 try {
-                    System.out.println("INSERTING OWN SPEED : 70KMH");
-                    kieSession.insert(new CurrentSpeedEvent(70.0, new Date()));
+                    System.out.println("INSERTING OWN SPEED");
+                    kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date()));
                     Thread.sleep(1000);
+                    i++;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -81,11 +96,16 @@ public class BrakeAssistService {
         }, "OwnCarThread");
 
         simulationThreadFrontCar = new Thread(() -> {
+            List<Double> frontCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
+            int size = frontCarSpeed.size();
+            int i = size;
             while (running) {
                 try {
                     System.out.println("INSERTING FRONT CAR SPEED : 30KMH");
-                    kieSession.insert(new CurrentSpeedEvent(30.0, new Date(), true));
+                    kieSession.insert(new CurrentSpeedEvent(frontCarSpeed.get(i % size), new Date(), true));
                     Thread.sleep(1000);
+                    i++;
+
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

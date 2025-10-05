@@ -2,6 +2,7 @@ package com.ftn.service;
 
 import com.ftn.model.events.CurrentSpeedEvent;
 import com.ftn.model.events.FuelFlowEvent;
+import com.ftn.utils.TemplateLoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Math.abs;
 
@@ -45,11 +47,14 @@ public class FuelConsumptionService {
             running = true;
 
             new Thread(() -> {
+                List<Double> fuelMiligrams = TemplateLoadingUtility.loadDataFromCSV("testCases/values_0_5_to_2_0.csv");
+                int size = fuelMiligrams.size();
+                int i = size;
                 while (running) {
-                    double fuelMiligrams = 2 * Math.sin(System.currentTimeMillis());
-                    kieSession.insert(new FuelFlowEvent(abs(fuelMiligrams), new Date()));
                     try {
+                        kieSession.insert(new FuelFlowEvent(abs(fuelMiligrams.get(i % size)), new Date()));
                         Thread.sleep(2000);
+                        i++;
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         break;
@@ -58,12 +63,14 @@ public class FuelConsumptionService {
             }, "FuelFlowThread").start();
 
             new Thread(() -> {
-                long seed = 10;
+                List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
+                int size = ownCarSpeed.size();
+                int i = size;
                 while (running) {
-                    double currentSpeed = 60 * Math.sin(System.currentTimeMillis() - seed);
-                    kieSession.insert(new CurrentSpeedEvent(abs(currentSpeed), new Date()));
                     try {
+                        kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date(), true));
                         Thread.sleep(2000);
+                         i++;
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         break;

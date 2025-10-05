@@ -6,18 +6,14 @@ import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
-import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.internal.utils.KieHelper;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,5 +73,21 @@ public class TemplateLoadingUtility {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<Double> loadDataFromCSV(String path) {
+        List<Double> dataArray = new ArrayList<>();
+        try {
+            ClassPathResource resource = new ClassPathResource(path);
+            try (Scanner scanner = new Scanner(new InputStreamReader(resource.getInputStream()))){
+                while (scanner.hasNextLine()) {
+                    Double d = Double.parseDouble(scanner.nextLine().split(TemplateLoadingUtility.DELIMITER)[0]);
+                    dataArray.add(d);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dataArray;
     }
 }

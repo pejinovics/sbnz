@@ -1,9 +1,8 @@
 package com.ftn.service;
 
-import com.ftn.dtos.RuleDTO;
+import com.ftn.model.Side;
 import com.ftn.model.Tyre;
 import com.ftn.model.TyreSeason;
-import com.ftn.model.TyreSide;
 import com.ftn.utils.TemplateLoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.drools.template.DataProvider;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 public class TyrePressureService {
@@ -36,17 +36,17 @@ public class TyrePressureService {
             KieSession kSession = TemplateLoadingUtility.createKieSessionFromDRL(drl);
             notifier.attach(kSession);
 
-            Tyre frontLeft = new Tyre(2.2, TyreSeason.WINTER, TyreSide.FRONT_LEFT);
-            Tyre frontRight = new Tyre(3.0, TyreSeason.WINTER, TyreSide.FRONT_RIGHT);
-            Tyre rearLeft = new Tyre(2.2, TyreSeason.WINTER, TyreSide.REAR_LEFT);
-            Tyre rearRight = new Tyre(2.2, TyreSeason.WINTER, TyreSide.REAR_RIGHT);
+            Tyre frontLeft = new Tyre(2.2, TyreSeason.WINTER, Side.FRONT_LEFT);
+            Tyre frontRight = new Tyre(3.0, TyreSeason.WINTER, Side.FRONT_RIGHT);
+            Tyre rearLeft = new Tyre(2.2, TyreSeason.WINTER, Side.REAR_LEFT);
+            Tyre rearRight = new Tyre(2.2, TyreSeason.WINTER, Side.REAR_RIGHT);
 
             FactHandle handle = kSession.insert(frontLeft);
             kSession.insert(frontRight);
             kSession.insert(rearLeft);
             kSession.insert(rearRight);
 
-            double[] pressures = {1.8, 2.5, 3.4, 2.1};
+            List<Double> pressures = TemplateLoadingUtility.loadDataFromCSV("testCases/tyrePressures1.csv");
             for (double p : pressures) {
                 frontLeft.setPressure(p);
                 kSession.update(handle, frontLeft);

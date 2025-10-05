@@ -51,7 +51,10 @@ public class GearBoxService {
             GearBox gearBox = new GearBox(1, 1000, GearBox.State.OK);
             FactHandle handle = kSession.insert(gearBox);
 
-            int[] rpms = {2500, 3500, 2000, 4000, 1800, 3700};
+            int[] rpms = TemplateLoadingUtility.loadDataFromCSV("testCases/gearBoxTestData1.csv")
+                    .stream()
+                    .mapToInt(Double::intValue)
+                    .toArray();
 
             for (int rpm : rpms) {
                 gearBox.setCurrentRPM(rpm);
