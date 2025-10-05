@@ -1,5 +1,6 @@
 package com.ftn.utils;
 
+import org.drools.core.io.impl.ClassPathResource;
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
 import org.kie.api.KieBase;
@@ -17,6 +18,7 @@ import org.kie.internal.utils.KieHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -53,23 +55,27 @@ public class TemplateLoadingUtility {
 
     public static DataProvider loadTemplateFromCSV(String path) {
         List<String[]> rules = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File(path))){
-            while (scanner.hasNextLine()) {
-                String[] new_rule = scanner.nextLine().split(TemplateLoadingUtility.DELIMITER);
-                rules.add(new_rule);
-            }
-            String[][] rules_array = new String[rules.size() - 1][rules.get(1).length];
-            for (int i = 1; i < rules.size(); i++) {
-                rules_array[i - 1] = rules.get(i);
-            }
-            return new ArrayDataProvider(rules_array);
-        }
-        catch (Exception e) {
-            if (e.getClass().equals(FileNotFoundException.class)) {
-                e.printStackTrace();
-            }
-        }
 
-        return null;
+        try {
+            ClassPathResource resource = new ClassPathResource(path);
+            try (Scanner scanner = new Scanner(new InputStreamReader(resource.getInputStream()))) {
+
+                while (scanner.hasNextLine()) {
+                    String[] new_rule = scanner.nextLine().split(TemplateLoadingUtility.DELIMITER);
+                    rules.add(new_rule);
+                }
+
+                String[][] rules_array = new String[rules.size() - 1][rules.get(1).length];
+                for (int i = 1; i < rules.size(); i++) {
+                    rules_array[i - 1] = rules.get(i);
+                }
+
+                return new ArrayDataProvider(rules_array);
+            }
+        } catch (Exception e) {
+            System.err.println("Greška pri učitavanju CSV fajla: " + path);
+            e.printStackTrace();
+            return null;
+        }
     }
 }

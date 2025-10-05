@@ -49,7 +49,7 @@ public class FuelConsumptionService {
                     double fuelMiligrams = 2 * Math.sin(System.currentTimeMillis());
                     kieSession.insert(new FuelFlowEvent(abs(fuelMiligrams), new Date()));
                     try {
-                        Thread.sleep(150);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         break;
@@ -63,7 +63,7 @@ public class FuelConsumptionService {
                     double currentSpeed = 60 * Math.sin(System.currentTimeMillis() - seed);
                     kieSession.insert(new CurrentSpeedEvent(abs(currentSpeed), new Date()));
                     try {
-                        Thread.sleep(150);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         break;

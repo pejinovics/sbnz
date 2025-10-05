@@ -9,7 +9,7 @@ import com.ftn.model.GearBox;
 
 template "gear-box"
 
-rule "Shift up to @{newGear}"
+rule "Shifted up to @{newGear}"
     when
         $gb : GearBox(currentRPM > @{maxRpm} && currentGear + 1 == @{newGear})
     then
@@ -17,7 +17,7 @@ rule "Shift up to @{newGear}"
         System.out.println("Shift gear Up to @{newGear}");
 end
 
-rule "Shift down to @{newGear}"
+rule "Shifted down to @{newGear}"
     when
         $gb: GearBox(currentRPM < @{minRpm} && currentGear - 1 == @{newGear})
     then

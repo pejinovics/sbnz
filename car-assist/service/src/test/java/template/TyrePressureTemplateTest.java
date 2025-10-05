@@ -19,6 +19,7 @@ public class TyrePressureTemplateTest {
 
     InputStream template = TyrePressureTemplateTest.class.getResourceAsStream("/rules/tyrePressure/tyre-pressure-template.drt");
     System.out.println(System.getProperty("user.dir"));
+    System.out.println("sta god");
     DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/tyrePressure.csv");
 
     DataProviderCompiler converter = new DataProviderCompiler();

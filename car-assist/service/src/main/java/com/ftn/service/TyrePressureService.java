@@ -28,8 +28,7 @@ public class TyrePressureService {
     public void simulateTyrePressure() {
         try {
             InputStream template = TyrePressureService.class.getResourceAsStream("/rules/tyrePressure/tyre-pressure-template.drt");
-            System.out.println(System.getProperty("user.dir"));
-            DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/tyrePressure.csv");
+            DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("templateTable/tyrePressure.csv");
 
             DataProviderCompiler converter = new DataProviderCompiler();
             String drl = converter.compile(dataProvider, template);

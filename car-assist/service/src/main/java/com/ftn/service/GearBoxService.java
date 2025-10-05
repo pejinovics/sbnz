@@ -1,8 +1,11 @@
 package com.ftn.service;
 
 import com.ftn.model.GearBox;
+import com.ftn.utils.TemplateLoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.drools.decisiontable.ExternalSpreadsheetCompiler;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.io.ResourceType;
@@ -28,10 +31,9 @@ public class GearBoxService {
     public void simulateGearBox() {
         try {
             InputStream template = GearBoxService.class.getResourceAsStream("/rules/gearBox/gear-box-template.drt");
-            InputStream data = GearBoxService.class.getResourceAsStream("/templateTable/gearBox.xls");
-
-            ExternalSpreadsheetCompiler converter = new ExternalSpreadsheetCompiler();
-            String drl = converter.compile(data, template, 3, 5);
+            DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("templateTable/gearBox.csv");
+            DataProviderCompiler converter = new DataProviderCompiler();
+            String drl = converter.compile(dataProvider, template);
 
             KieHelper kieHelper = new KieHelper();
             kieHelper.addContent(drl, ResourceType.DRL);
