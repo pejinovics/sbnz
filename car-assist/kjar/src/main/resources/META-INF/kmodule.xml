@@ -17,4 +17,7 @@
     <kbase name="brakeAssist" packages="brakeAssist" eventProcessingMode="stream">
         <ksession name="brakeAssistKSession" type="stateful" clockType="realtime"/>
     </kbase>
+    <kbase name="backwardHvac" packages="backwardHvac">
+        <ksession name="backwardhvacKsession"/>
+    </kbase>
 </kmodule>
