@@ -3,7 +3,7 @@ package com.ftn.service;
 import com.ftn.model.DriveSystem;
 import com.ftn.model.SurroundSystem;
 import com.ftn.model.events.CurrentSpeedEvent;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class BrakeAssistService {
@@ -48,13 +49,22 @@ public class BrakeAssistService {
             kieSession = kieContainer.newKieSession("brakeAssistKSession", configuration);
             notifier.attach(kieSession);
 
-            kieSession.setGlobal("minFrontVehicleDistance", 10.0);
-            kieSession.setGlobal("minBreakingSpeed", 30.0);
-            kieSession.setGlobal("dangerTTC", 10.0);
-            kieSession.setGlobal("maxDangerTTC", 3.0);
+            Properties properties = LoadingUtility.loadSystemProperties();
 
-            SurroundSystem surroundSystem = new SurroundSystem(0.7, 0.7, true, 9.0, 1.0);
-            DriveSystem driveSystem = new DriveSystem(0.0, false, false, false);
+            kieSession.setGlobal("minFrontVehicleDistance", Double.valueOf(properties.getProperty("braking.minFrontVehicleDistance")));
+            kieSession.setGlobal("minBrakingSpeed", Double.valueOf(properties.getProperty("braking.minBrakingSpeed")));
+            kieSession.setGlobal("dangerTTC", Double.valueOf(properties.getProperty("braking.dangerTTC")));
+            kieSession.setGlobal("maxDangerTTC", Double.valueOf(properties.getProperty("braking.maxDangerTTC")));
+
+            SurroundSystem surroundSystem = new SurroundSystem(Double.parseDouble(properties.getProperty("surround_system.left_line_distance")),
+                    Double.parseDouble(properties.getProperty("surround_system.right_line_distance")),
+                    Boolean.parseBoolean(properties.getProperty("surround_system.line_visible")),
+                    Double.parseDouble(properties.getProperty("surround_system.front_vehicle_distance")),
+                    1.0);
+            DriveSystem driveSystem = new DriveSystem(0.0,
+                    Boolean.parseBoolean(properties.getProperty("drive_system.brake_pressed")),
+                    Boolean.parseBoolean(properties.getProperty("surround_system.left_turn_signal")),
+                    Boolean.parseBoolean(properties.getProperty("surround_system.right_turn_signal")));
 
             FactHandle surroundSystemHandle =  kieSession.insert(surroundSystem);
             FactHandle driveSystemHandle = kieSession.insert(driveSystem);
@@ -63,7 +73,7 @@ public class BrakeAssistService {
 
             new Thread(() -> kieSession.fireUntilHalt(), "DroolsFireThread").start();
 
-            List<Double> frontCarDistances = TemplateLoadingUtility.loadDataFromCSV("testCases/frontCarDistance1.csv");
+            List<Double> frontCarDistances = LoadingUtility.loadDataFromCSV("testCases/frontCarDistance1.csv");
             int size = frontCarDistances.size();
             for (int i = size; ; i++) {
                 surroundSystem.setFrontVehicleDistance(frontCarDistances.get(i % size));
@@ -80,7 +90,7 @@ public class BrakeAssistService {
 
     private void startSimulationThreads() {
         simulationThreadOwnCar = new Thread(() -> {
-            List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_65_to_70.csv");
+            List<Double> ownCarSpeed = LoadingUtility.loadDataFromCSV("testCases/speedValues/values_65_to_70.csv");
             int size = ownCarSpeed.size();
             int i = size;
             while (running) {
@@ -96,7 +106,7 @@ public class BrakeAssistService {
         }, "OwnCarThread");
 
         simulationThreadFrontCar = new Thread(() -> {
-            List<Double> frontCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
+            List<Double> frontCarSpeed = LoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
             int size = frontCarSpeed.size();
             int i = size;
             while (running) {

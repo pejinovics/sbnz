@@ -7,7 +7,7 @@ import com.ftn.model.events.TriggerType
 import com.ftn.model.events.CurrentSpeedEvent
 
 global Double minFrontVehicleDistance;
-global Double minBreakingSpeed;
+global Double minBrakingSpeed;
 global Double dangerTTC;
 global Double maxDangerTTC;
 
@@ -19,7 +19,7 @@ rule "check front vehicle distance and speed"
                 CurrentSpeedEvent($s : currentSpeed, carInFront == false)
                 over window : length(1), sum($s)
         )
-        eval($speed > minBreakingSpeed)
+        eval($speed > minBrakingSpeed)
     then
         insert(new TriggerEvent(TriggerType.VEHICLE_MOVING));
 end
@@ -52,7 +52,7 @@ lock-on-active
         insert(new TriggerEvent(TriggerType.HELP_BRAKING));
 end
 
-rule "Show breaking warning"
+rule "Show braking warning"
     when
         $te : TriggerEvent(type == TriggerType.HELP_BRAKING)
         $ds : DriveSystem(brakePressed == true)
@@ -60,10 +60,10 @@ rule "Show breaking warning"
         System.out.println("Showing brake warning.");
 end
 
-rule "Apply emergency breaking"
+rule "Apply emergency braking"
     when
         $te : TriggerEvent(type == TriggerType.HELP_BRAKING)
         $ds : DriveSystem(brakePressed == false)
     then
-        System.out.println("Applying emergency breaking.");
+        System.out.println("Applying emergency braking.");
 end
