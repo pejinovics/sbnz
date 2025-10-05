@@ -68,7 +68,7 @@ public class FuelConsumptionService {
                 int i = size;
                 while (running) {
                     try {
-                        kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date(), true));
+                        kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date()));
                         Thread.sleep(2000);
                          i++;
                     } catch (InterruptedException e) {
