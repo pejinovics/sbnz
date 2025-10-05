@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
 
   simulations = [
     { label: 'Air Condition', value: 'aircondition' },
+    { label: 'Door System', value: 'doorsystem' },
     { label: 'Motor System', value: 'motorsystem' },
     { label: 'HVAC System', value: 'hvacsystem' },
     { label: 'Tyre Pressure', value: 'tyrepressure' },

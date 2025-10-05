@@ -68,7 +68,7 @@ public class BrakeAssistService {
             for (int i = size; ; i++) {
                 surroundSystem.setFrontVehicleDistance(frontCarDistances.get(i % size));
                 kieSession.update(surroundSystemHandle, surroundSystem);
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             }
 
 
@@ -87,7 +87,7 @@ public class BrakeAssistService {
                 try {
                     System.out.println("INSERTING OWN SPEED");
                     kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date()));
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                     i++;
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -103,7 +103,7 @@ public class BrakeAssistService {
                 try {
                     System.out.println("INSERTING FRONT CAR SPEED : 30KMH");
                     kieSession.insert(new CurrentSpeedEvent(frontCarSpeed.get(i % size), new Date(), true));
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                     i++;
 
                 } catch (InterruptedException e) {

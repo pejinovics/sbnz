@@ -47,12 +47,10 @@ public class LineAssistService {
             KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRLForCEP(drl);
             notifier.attach(kieSession);
 
-            // Postavljanje global promenljivih
             kieSession.setGlobal("minDistance", 0.5);
             kieSession.setGlobal("minLineWarnSpeed", 30.0);
             kieSession.setGlobal("minLineSteerSpeed", 60.0);
 
-            // Inicijalizacija početnih objekata
             SurroundSystem surroundSystem = new SurroundSystem(0.1, 0.7, true, 10.0, 1.0);
             DriveSystem driveSystem = new DriveSystem(0.0, false, false, false);
             surroundSystem.setLeftLineDistance(0.1);
@@ -60,7 +58,6 @@ public class LineAssistService {
             kieSession.insert(surroundSystem);
             kieSession.insert(driveSystem);
 
-            // Paralelni thread za simulaciju brzine
             simulationThread = new Thread(() -> {
                 List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
                 try {
