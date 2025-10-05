@@ -15,9 +15,14 @@ public class CurrentSpeedEvent implements Serializable {
     private static final long serialVersionID = 1L;
     private final double currentSpeed;
     private final Date timestamp;
+    private boolean carInFront;
     public CurrentSpeedEvent(double currentSpeed, Date timestamp) {
         this.currentSpeed = currentSpeed;
         this.timestamp = timestamp;
+    }
+    public CurrentSpeedEvent(double currentSpeed, Date timestamp, boolean carInFront) {
+        this(currentSpeed, timestamp);
+        this.carInFront = carInFront;
     }
 
     public double getCurrentSpeed() {
@@ -26,5 +31,9 @@ public class CurrentSpeedEvent implements Serializable {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    public boolean isCarInFront() {
+        return carInFront;
     }
 }

@@ -6,12 +6,12 @@ import com.ftn.model.events.FuelFlowEvent
 rule "Immediate fuel consumption"
     lock-on-active
     when
-        $afc: Double(true) from accumulate(
+        $afc: Double() from accumulate(
             FuelFlowEvent($immediateConsumption:fuelMiligrams)                  // mg/s
             over window: time(5s), average($immediateConsumption)
         )
         $as: Double(doubleValue > 0) from accumulate(
-            CurrentSpeedEvent($speed: currentSpeed)                             // km/h
+            CurrentSpeedEvent($speed: currentSpeed, carInFront == false)                             // km/h
             over window: time(5s), average($speed)
         )
         $consumption : Double() from ($afc / $as) * 1.32 * 3600 / 10                  // 1.32 * 1 mg/s = 1 ml/s for gasoline

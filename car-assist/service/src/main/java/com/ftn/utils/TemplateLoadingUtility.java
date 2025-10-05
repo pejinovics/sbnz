@@ -2,10 +2,17 @@ package com.ftn.utils;
 
 import org.drools.template.DataProvider;
 import org.drools.template.objects.ArrayDataProvider;
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
 import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
+import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.internal.utils.KieHelper;
 
 import java.io.File;
@@ -23,14 +30,25 @@ public class TemplateLoadingUtility {
         kieHelper.addContent(drl, ResourceType.DRL);
 
         Results results = kieHelper.verify();
-
-        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)) {
-            List<Message> messages = results.getMessages(Message.Level.ERROR, Message.Level.ERROR);
-            for (Message message : messages) {
-                System.out.println("Error : " + message.getText());
-            }
-        }
+        
         return kieHelper.build().newKieSession();
+    }
+
+    public static KieSession createKieSessionFromDRLForCEP(String drl) {
+        KieServices kieServices = KieServices.Factory.get();
+        KieBaseConfiguration kieBaseConfiguration = kieServices.newKieBaseConfiguration();
+        kieBaseConfiguration.setOption(EventProcessingOption.STREAM);
+
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+
+        KieBase kieBase = kieHelper.build(kieBaseConfiguration);
+
+        KieSessionConfiguration kieSessionConfiguration = kieServices.newKieSessionConfiguration();
+        kieSessionConfiguration.setOption(ClockTypeOption.get("realtime"));
+        kieSessionConfiguration.setProperty("type", "stateful");
+
+        return kieBase.newKieSession(kieSessionConfiguration, null);
     }
 
     public static DataProvider loadTemplateFromCSV(String path) {
