@@ -63,7 +63,7 @@ public class BrakeAssistService {
 
             new Thread(() -> kieSession.fireUntilHalt(), "DroolsFireThread").start();
 
-            List<Double> frontCarDistances = TemplateLoadingUtility.loadDataFromCSV("testCases/brakeAssist/frontCarDistance1.csv");
+            List<Double> frontCarDistances = TemplateLoadingUtility.loadDataFromCSV("testCases/frontCarDistance1.csv");
             int size = frontCarDistances.size();
             for (int i = size; ; i++) {
                 surroundSystem.setFrontVehicleDistance(frontCarDistances.get(i % size));
