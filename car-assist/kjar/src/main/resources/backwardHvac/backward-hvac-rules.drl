@@ -17,18 +17,18 @@ then
 end
 
 
-rule "Pravilo: Sistem zdrav"
+rule "Pravilo: Sistem zdrav (HVAC)"
 when
-    String( this == "Pravilo: Sistem zdrav" )
+    String( this == "Pravilo: Sistem zdrav (HVAC)" )
     not hasFault("false", "Klima i ventilacija (HVAC)"; )
 then
     System.out.println( "Klima i ventilacija (HVAC) je zdrav" );
 end
 
 
-rule "Pravilo: Sistem u kvaru"
+rule "Pravilo: Sistem u kvaru (HVAC)"
 when
-    String( this == "Pravilo: Sistem u kvaru" )
+    String( this == "Pravilo: Sistem u kvaru (HVAC)" )
     hasFault("false", "Klima i ventilacija (HVAC)"; )
 then
     System.out.println( "Klima i ventilacija (HVAC) je u kvaru" );

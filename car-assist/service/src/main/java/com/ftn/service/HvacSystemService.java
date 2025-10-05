@@ -26,8 +26,8 @@ public class HvacSystemService {
             insertHierarchy(kSession);
 
             String[] commands = {
-                    "Pravilo: Sistem zdrav",
-                    "Pravilo: Sistem u kvaru",
+                    "Pravilo: Sistem zdrav (HVAC)",
+                    "Pravilo: Sistem u kvaru (HVAC)",
                     "Pravilo: Prikaz sistema",
                     "Pravilo: Proveri Distribuciju vazduha",
                     "Pravilo: Distribucija vazduha"

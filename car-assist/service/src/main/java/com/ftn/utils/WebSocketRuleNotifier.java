@@ -161,7 +161,7 @@ public class WebSocketRuleNotifier {
             return "eventCount (TTC events in 3s)";
         }
         // ---- LINE ASSIST ----
-        if (name.contains("turn signal off")) {
+        if (name.contains("line assist")) {
             return "currentSpeed (km/h)";
         }
 
