@@ -22,13 +22,6 @@ public class LineAssistForwardTest {
 
     @Test
     public void LineAssistTest1() {
-//        KieServices kieServices = KieServices.Factory.get();
-//        KieContainer kieContainer = kieServices.getKieClasspathContainer();
-//
-//        KieSessionConfiguration configuration = KieServices.Factory.get().newKieSessionConfiguration();
-//        configuration.setOption(ClockTypeOption.get("realtime"));
-//
-//        KieSession kieSession = kieContainer.newKieSession("lineAssistKSession", configuration);
 
         InputStream template = LineAssistForwardTest.class.getResourceAsStream("/rules/lineAssist/line-assist.drt");
         DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/lineAssist.csv");

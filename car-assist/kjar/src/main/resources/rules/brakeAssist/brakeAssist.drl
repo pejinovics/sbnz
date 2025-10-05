@@ -1,0 +1,69 @@
+package rules.brakeAssist;
+
+import com.ftn.model.DriveSystem
+import com.ftn.model.SurroundSystem
+import com.ftn.model.events.TriggerEvent
+import com.ftn.model.events.TriggerType
+import com.ftn.model.events.CurrentSpeedEvent
+
+global Double minFrontVehicleDistance;
+global Double minBreakingSpeed;
+global Double dangerTTC;
+global Double maxDangerTTC;
+
+
+rule "check front vehicle distance and speed"
+    when
+        $ss : SurroundSystem(frontVehicleDistance < minFrontVehicleDistance)
+        $speed : Double() from accumulate(
+                CurrentSpeedEvent($s : currentSpeed, carInFront == false)
+                over window : length(1), sum($s)
+        )
+        eval($speed > minBreakingSpeed)
+    then
+        insert(new TriggerEvent(TriggerType.VEHICLE_MOVING));
+end
+
+rule "calculate time to coalision"
+    when
+        $te : TriggerEvent(type == TriggerType.VEHICLE_MOVING)
+        $carInFrontSpeed : Double() from accumulate(
+                CurrentSpeedEvent($s : currentSpeed, carInFront == true)
+                over window : length(1), sum($s)
+        )
+        $myCarSpeed : Double() from accumulate(
+                CurrentSpeedEvent($s : currentSpeed, carInFront == false)
+                over window : length(1), sum($s)
+        )
+        $ss: SurroundSystem()
+        eval($ss.getFrontVehicleDistance() / ($myCarSpeed - $carInFrontSpeed) < dangerTTC)
+    then
+        insert(new TriggerEvent(TriggerType.TTC_DANGER));
+end
+
+rule "evaluate ttc danger"
+lock-on-active
+    when
+        $count : Number(intValue > maxDangerTTC) from accumulate(
+            $event : TriggerEvent()
+            over window: time(3s), count($event)
+        )
+    then
+        insert(new TriggerEvent(TriggerType.HELP_BRAKING));
+end
+
+rule "Show breaking warning"
+    when
+        $te : TriggerEvent(type == TriggerType.HELP_BRAKING)
+        $ds : DriveSystem(brakePressed == true)
+    then
+        System.out.println("Showing brake warning.");
+end
+
+rule "Apply emergency breaking"
+    when
+        $te : TriggerEvent(type == TriggerType.HELP_BRAKING)
+        $ds : DriveSystem(brakePressed == false)
+    then
+        System.out.println("Applying emergency breaking.");
+end

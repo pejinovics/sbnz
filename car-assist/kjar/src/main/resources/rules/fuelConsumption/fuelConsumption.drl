@@ -11,7 +11,7 @@ rule "Immediate fuel consumption"
             over window: time(5s), average($immediateConsumption)
         )
         $as: Double(doubleValue > 0) from accumulate(
-            CurrentSpeedEvent($speed: currentSpeed)                             // km/h
+            CurrentSpeedEvent($speed: currentSpeed, carInFront == false)                             // km/h
             over window: time(5s), average($speed)
         )
         $consumption : Double() from ($afc / $as) * 1.32 * 3600 / 10                  // 1.32 * 1 mg/s = 1 ml/s for gasoline

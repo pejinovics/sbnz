@@ -30,13 +30,7 @@ public class TemplateLoadingUtility {
         kieHelper.addContent(drl, ResourceType.DRL);
 
         Results results = kieHelper.verify();
-
-        if (results.hasMessages(Message.Level.WARNING, Message.Level.ERROR)) {
-            List<Message> messages = results.getMessages(Message.Level.ERROR, Message.Level.ERROR);
-            for (Message message : messages) {
-                System.out.println("Error : " + message.getText());
-            }
-        }
+        
         return kieHelper.build().newKieSession();
     }
 

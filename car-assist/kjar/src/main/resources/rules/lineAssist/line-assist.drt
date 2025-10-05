@@ -37,8 +37,8 @@ end
 rule "@{side_LOWER} turn signal off, check speed for warning"
     when
         $speed : Double() from accumulate(
-            CurrentSpeedEvent($s: currentSpeed)
-            over window: length(1), sum($s)
+                CurrentSpeedEvent($s: currentSpeed, carInFront == false)
+                over window: length(1), sum($s)
         )
         $te : TriggerEvent(type == TriggerType.@{side_UPPER}_LINE_ASSIST)
         eval($speed > minLineWarnSpeed && $speed < minLineSteerSpeed)
@@ -50,8 +50,8 @@ end
 rule "@{side_LOWER} turn signal off, check speed for steering"
     when
         $speed : Double() from accumulate(
-            CurrentSpeedEvent($s : currentSpeed)
-            over window: length(1), sum($s)
+                CurrentSpeedEvent($s : currentSpeed, carInFront == false)
+                over window: length(1), sum($s)
         )
         $te : TriggerEvent(type == TriggerType.@{side_UPPER}_LINE_ASSIST)
         eval($speed >= minLineSteerSpeed)

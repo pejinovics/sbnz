@@ -14,4 +14,7 @@
     <kbase name="lineAssist" packages="lineAssist" eventProcessingMode="stream">
         <ksession name="lineAssistKSession" type="stateful" clockType="realtime"/>
     </kbase>
+    <kbase name="brakeAssist" packages="brakeAssist" eventProcessingMode="stream">
+        <ksession name="brakeAssistKSession" type="stateful" clockType="realtime"/>
+    </kbase>
 </kmodule>
