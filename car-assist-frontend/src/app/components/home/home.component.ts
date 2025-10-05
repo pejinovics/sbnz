@@ -30,7 +30,9 @@ export class HomeComponent implements OnInit {
     { label: 'Motor System', value: 'motorsystem' },
     { label: 'Tyre Pressure', value: 'tyrepressure' },
     { label: 'Gear Box', value: 'gearbox' },
-    { label: 'Fuel Consumption (CEP)', value: 'fuelconsumption' }
+    { label: 'Fuel Consumption (CEP)', value: 'fuelconsumption' },
+    { label: 'Break Assist (FC)', value: 'brakeassist' },
+    { label: 'Line Assist (FC)', value: 'lineassist' }
   ];
 
   selectedSimulation: string = 'aircondition';
@@ -54,4 +56,17 @@ export class HomeComponent implements OnInit {
       error: err => console.error('Greška pri pokretanju:', err)
     });
   }
+
+  stopSimulation() {
+    if (!this.selectedSimulation) return;
+    this.simulationService.stopSimulation(this.selectedSimulation).subscribe({
+      next: res => console.log('Simulacija zaustavljena:', res),
+      error: err => console.error('Greška pri zaustavljanju:', err)
+    });
+  }
+
+  isStoppable(): boolean {
+    return ['lineassist', 'brakeassist', 'fuelconsumption'].includes(this.selectedSimulation);
+  }
+
 }

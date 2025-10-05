@@ -13,4 +13,9 @@ export class SimulationService {
     const url = `${env.api}/api/simulate/${type}`;
     return this.http.get(url, { responseType: 'text' });
   }
+
+  stopSimulation(type: string): Observable<string> {
+    const url = `${env.api}/api/simulate/${type}/stop`;
+    return this.http.get(url, { responseType: 'text' });
+  }
 }
