@@ -1,0 +1,63 @@
+template header
+side_UPPER
+side_LOWER
+
+package rules.lineAssist;
+
+import com.ftn.model.DriveSystem
+import com.ftn.model.SurroundSystem
+import com.ftn.model.events.TriggerEvent
+import com.ftn.model.events.TriggerType
+import com.ftn.model.events.CurrentSpeedEvent
+
+global Double minDistance;
+global Double minLineWarnSpeed;
+global Double minLineSteerSpeed;
+
+template "line-assist"
+
+rule "@{side_LOWER} line too close"
+    when
+        $ss : SurroundSystem(lineVisible == true && @{side_LOWER}LineDistance < minDistance)
+    then
+        System.out.println("@{side_UPPER} line too close");
+        insert(new TriggerEvent(TriggerType.@{side_UPPER}_LINE));
+end
+
+rule "@{side_LOWER} line close, check @{side_LOWER} turn signal"
+    when
+        $te : TriggerEvent(type == TriggerType.@{side_UPPER}_LINE)
+        $ds : DriveSystem(@{side_LOWER}TurnSignal == false)
+    then
+        System.out.println("Line close, check @{side_LOWER} turn signal");
+        delete($te);
+        insert(new TriggerEvent(TriggerType.@{side_UPPER}_LINE_ASSIST));
+end
+
+rule "@{side_LOWER} turn signal off, check speed for warning"
+    when
+        $speed : Double() from accumulate(
+            CurrentSpeedEvent($s: currentSpeed)
+            over window: length(1), sum($s)
+        )
+        $te : TriggerEvent(type == TriggerType.@{side_UPPER}_LINE_ASSIST)
+        eval($speed > minLineWarnSpeed && $speed < minLineSteerSpeed)
+    then
+        delete($te);
+        System.out.println("Warning, watch @{side_LOWER} line");
+end
+
+rule "@{side_LOWER} turn signal off, check speed for steering"
+    when
+        $speed : Double() from accumulate(
+            CurrentSpeedEvent($s : currentSpeed)
+            over window: length(1), sum($s)
+        )
+        $te : TriggerEvent(type == TriggerType.@{side_UPPER}_LINE_ASSIST)
+        eval($speed >= minLineSteerSpeed)
+    then
+        delete($te);
+        System.out.println("Steering wheel from the @{side_LOWER} line!");
+end
+
+end template

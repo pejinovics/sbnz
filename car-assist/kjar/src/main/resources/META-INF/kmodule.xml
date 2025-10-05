@@ -12,6 +12,6 @@
         <ksession name="fuelConsumptionKSession" type="stateful"/>
     </kbase>
     <kbase name="lineAssist" packages="lineAssist" eventProcessingMode="stream">
-        <ksession name="lineAssistKSession" type="stateful"/>
+        <ksession name="lineAssistKSession" type="stateful" clockType="realtime"/>
     </kbase>
 </kmodule>

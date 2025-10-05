@@ -3,6 +3,9 @@ package forward;
 import com.ftn.model.DriveSystem;
 import com.ftn.model.SurroundSystem;
 import com.ftn.model.events.CurrentSpeedEvent;
+import com.ftn.utils.TemplateLoadingUtility;
+import org.drools.template.DataProvider;
+import org.drools.template.DataProviderCompiler;
 import org.junit.Test;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -10,6 +13,7 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
 
+import java.io.InputStream;
 import java.util.Date;
 
 import static java.lang.Math.abs;
@@ -18,13 +22,22 @@ public class LineAssistForwardTest {
 
     @Test
     public void LineAssistTest1() {
-        KieServices kieServices = KieServices.Factory.get();
-        KieContainer kieContainer = kieServices.getKieClasspathContainer();
+//        KieServices kieServices = KieServices.Factory.get();
+//        KieContainer kieContainer = kieServices.getKieClasspathContainer();
+//
+//        KieSessionConfiguration configuration = KieServices.Factory.get().newKieSessionConfiguration();
+//        configuration.setOption(ClockTypeOption.get("realtime"));
+//
+//        KieSession kieSession = kieContainer.newKieSession("lineAssistKSession", configuration);
 
-        KieSessionConfiguration configuration = KieServices.Factory.get().newKieSessionConfiguration();
-        configuration.setOption(ClockTypeOption.get("realtime"));
+        InputStream template = LineAssistForwardTest.class.getResourceAsStream("/rules/lineAssist/line-assist.drt");
+        DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/lineAssist.csv");
 
-        KieSession kieSession = kieContainer.newKieSession("lineAssistKSession", configuration);
+        DataProviderCompiler converter = new DataProviderCompiler();
+        String drl = converter.compile(dataProvider, template);
+
+        KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRLForCEP(drl);
+
 
         kieSession.setGlobal("minDistance", 0.5);
         kieSession.setGlobal("minLineWarnSpeed", 30.0);
