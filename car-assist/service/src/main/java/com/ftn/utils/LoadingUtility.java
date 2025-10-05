@@ -14,12 +14,15 @@ import org.kie.api.runtime.KieSessionConfiguration;
 import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.internal.utils.KieHelper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
-public class TemplateLoadingUtility {
+public class LoadingUtility {
 
     public static final String DELIMITER = ";";
 
@@ -57,7 +60,7 @@ public class TemplateLoadingUtility {
             try (Scanner scanner = new Scanner(new InputStreamReader(resource.getInputStream()))) {
 
                 while (scanner.hasNextLine()) {
-                    String[] new_rule = scanner.nextLine().split(TemplateLoadingUtility.DELIMITER);
+                    String[] new_rule = scanner.nextLine().split(LoadingUtility.DELIMITER);
                     rules.add(new_rule);
                 }
 
@@ -81,7 +84,7 @@ public class TemplateLoadingUtility {
             ClassPathResource resource = new ClassPathResource(path);
             try (Scanner scanner = new Scanner(new InputStreamReader(resource.getInputStream()))){
                 while (scanner.hasNextLine()) {
-                    Double d = Double.parseDouble(scanner.nextLine().split(TemplateLoadingUtility.DELIMITER)[0]);
+                    Double d = Double.parseDouble(scanner.nextLine().split(LoadingUtility.DELIMITER)[0]);
                     dataArray.add(d);
                 }
             }
@@ -90,4 +93,17 @@ public class TemplateLoadingUtility {
         }
         return dataArray;
     }
+    public static Properties loadSystemProperties() {
+        Properties properties = new Properties();
+        try {
+            ClassPathResource resource = new ClassPathResource("system.properties");
+            try (InputStream inputStream = resource.getInputStream()) {
+                properties.load(inputStream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
+
 }

@@ -3,7 +3,7 @@ package template;
 import com.ftn.model.Side;
 import com.ftn.model.Tyre;
 import com.ftn.model.TyreSeason;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.junit.Test;
@@ -20,12 +20,12 @@ public class TyrePressureTemplateTest {
     InputStream template = TyrePressureTemplateTest.class.getResourceAsStream("/rules/tyrePressure/tyre-pressure-template.drt");
     System.out.println(System.getProperty("user.dir"));
     System.out.println("sta god");
-    DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/tyrePressure.csv");
+    DataProvider dataProvider = LoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/tyrePressure.csv");
 
     DataProviderCompiler converter = new DataProviderCompiler();
     String drl = converter.compile(dataProvider, template);
 
-    KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRL(drl);
+    KieSession kieSession = LoadingUtility.createKieSessionFromDRL(drl);
 
     doTest(kieSession);
 
