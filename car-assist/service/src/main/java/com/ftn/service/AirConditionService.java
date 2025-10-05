@@ -2,7 +2,7 @@ package com.ftn.service;
 
 import com.ftn.model.AirCondition;
 import com.ftn.util.KnowledgeSessionHelper;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -10,6 +10,7 @@ import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class AirConditionService {
@@ -27,13 +28,15 @@ public class AirConditionService {
 
             ruleNotifier.attach(kSession);
 
+            Properties properties = LoadingUtility.loadSystemProperties();
+
             AirCondition airCondition = new AirCondition();
             airCondition.setState(AirCondition.State.OFF);
-            airCondition.setMeasuredTemp(25.0);
-            airCondition.setDesiredTemp(25.0);
+            airCondition.setMeasuredTemp(Double.valueOf(properties.getProperty("air_condition.measured_temp")));
+            airCondition.setDesiredTemp(Double.valueOf(properties.getProperty("air_condition.desired_temp")));
 
             FactHandle handle = kSession.insert(airCondition);
-            List<Double> temps = TemplateLoadingUtility.loadDataFromCSV("testCases/airConditionTestData1.csv");
+            List<Double> temps = LoadingUtility.loadDataFromCSV("testCases/airConditionTestData1.csv");
 
             for (double t : temps) {
                 airCondition.setMeasuredTemp(t);

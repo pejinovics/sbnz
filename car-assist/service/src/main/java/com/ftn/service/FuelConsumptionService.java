@@ -2,7 +2,7 @@ package com.ftn.service;
 
 import com.ftn.model.events.CurrentSpeedEvent;
 import com.ftn.model.events.FuelFlowEvent;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -47,7 +47,7 @@ public class FuelConsumptionService {
             running = true;
 
             new Thread(() -> {
-                List<Double> fuelMiligrams = TemplateLoadingUtility.loadDataFromCSV("testCases/values_0_5_to_2_0.csv");
+                List<Double> fuelMiligrams = LoadingUtility.loadDataFromCSV("testCases/values_0_5_to_2_0.csv");
                 int size = fuelMiligrams.size();
                 int i = size;
                 while (running) {
@@ -63,7 +63,7 @@ public class FuelConsumptionService {
             }, "FuelFlowThread").start();
 
             new Thread(() -> {
-                List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
+                List<Double> ownCarSpeed = LoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
                 int size = ownCarSpeed.size();
                 int i = size;
                 while (running) {

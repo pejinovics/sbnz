@@ -3,15 +3,11 @@ package forward;
 import com.ftn.model.DriveSystem;
 import com.ftn.model.SurroundSystem;
 import com.ftn.model.events.CurrentSpeedEvent;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.junit.Test;
-import org.kie.api.KieServices;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.KieSessionConfiguration;
-import org.kie.api.runtime.conf.ClockTypeOption;
 
 import java.io.InputStream;
 import java.util.Date;
@@ -24,12 +20,12 @@ public class LineAssistForwardTest {
     public void LineAssistTest1() {
 
         InputStream template = LineAssistForwardTest.class.getResourceAsStream("/rules/lineAssist/line-assist.drt");
-        DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/lineAssist.csv");
+        DataProvider dataProvider = LoadingUtility.loadTemplateFromCSV("../kjar/src/main/resources/templateTable/lineAssist.csv");
 
         DataProviderCompiler converter = new DataProviderCompiler();
         String drl = converter.compile(dataProvider, template);
 
-        KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRLForCEP(drl);
+        KieSession kieSession = LoadingUtility.createKieSessionFromDRLForCEP(drl);
 
 
         kieSession.setGlobal("minDistance", 0.5);

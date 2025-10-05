@@ -1,9 +1,8 @@
 package com.ftn.service;
 
 import com.ftn.model.GearBox;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
-import org.drools.decisiontable.ExternalSpreadsheetCompiler;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
 import org.kie.api.builder.Message;
@@ -31,7 +30,7 @@ public class GearBoxService {
     public void simulateGearBox() {
         try {
             InputStream template = GearBoxService.class.getResourceAsStream("/rules/gearBox/gear-box-template.drt");
-            DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("templateTable/gearBox.csv");
+            DataProvider dataProvider = LoadingUtility.loadTemplateFromCSV("templateTable/gearBox.csv");
             DataProviderCompiler converter = new DataProviderCompiler();
             String drl = converter.compile(dataProvider, template);
 
@@ -51,7 +50,7 @@ public class GearBoxService {
             GearBox gearBox = new GearBox(1, 1000, GearBox.State.OK);
             FactHandle handle = kSession.insert(gearBox);
 
-            int[] rpms = TemplateLoadingUtility.loadDataFromCSV("testCases/gearBoxTestData1.csv")
+            int[] rpms = LoadingUtility.loadDataFromCSV("testCases/gearBoxTestData1.csv")
                     .stream()
                     .mapToInt(Double::intValue)
                     .toArray();
