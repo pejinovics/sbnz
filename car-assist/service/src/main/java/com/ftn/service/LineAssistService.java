@@ -3,7 +3,7 @@ package com.ftn.service;
 import com.ftn.model.DriveSystem;
 import com.ftn.model.SurroundSystem;
 import com.ftn.model.events.CurrentSpeedEvent;
-import com.ftn.utils.TemplateLoadingUtility;
+import com.ftn.utils.LoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.drools.template.DataProvider;
 import org.drools.template.DataProviderCompiler;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import static java.lang.Math.abs;
 
@@ -39,27 +40,41 @@ public class LineAssistService {
 
         try {
             InputStream template = LineAssistService.class.getResourceAsStream("/rules/lineAssist/line-assist.drt");
-            DataProvider dataProvider = TemplateLoadingUtility.loadTemplateFromCSV("templateTable/lineAssist.csv");
+            DataProvider dataProvider = LoadingUtility.loadTemplateFromCSV("templateTable/lineAssist.csv");
 
             DataProviderCompiler converter = new DataProviderCompiler();
             String drl = converter.compile(dataProvider, template);
 
-            KieSession kieSession = TemplateLoadingUtility.createKieSessionFromDRLForCEP(drl);
+            KieSession kieSession = LoadingUtility.createKieSessionFromDRLForCEP(drl);
             notifier.attach(kieSession);
 
-            kieSession.setGlobal("minDistance", 0.5);
-            kieSession.setGlobal("minLineWarnSpeed", 30.0);
-            kieSession.setGlobal("minLineSteerSpeed", 60.0);
+            // Postavljanje global promenljivih
 
-            SurroundSystem surroundSystem = new SurroundSystem(0.1, 0.7, true, 10.0, 1.0);
-            DriveSystem driveSystem = new DriveSystem(0.0, false, false, false);
+            Properties properties = LoadingUtility.loadSystemProperties();
+
+            kieSession.setGlobal("minDistance", Double.parseDouble(properties.getProperty("line_assist.min_distance")));
+            kieSession.setGlobal("minLineWarnSpeed", Double.parseDouble(properties.getProperty("line_assist.min_line_warn_speed")));
+            kieSession.setGlobal("minLineSteerSpeed", Double.parseDouble(properties.getProperty("line_assist.min_line_steer_speed")));
+
+            // Inicijalizacija početnih objekata
+
+            SurroundSystem surroundSystem = new SurroundSystem(Double.parseDouble(properties.getProperty("surround_system.left_line_distance")),
+                    Double.parseDouble(properties.getProperty("surround_system.right_line_distance")),
+                    Boolean.parseBoolean(properties.getProperty("surround_system.line_visible")),
+                    Double.parseDouble(properties.getProperty("surround_system.front_vehicle_distance")),
+                    1.0);
+            DriveSystem driveSystem = new DriveSystem(0.0,
+                    Boolean.parseBoolean(properties.getProperty("drive_system.brake_pressed")),
+                    Boolean.parseBoolean(properties.getProperty("drive_system.left_turn_signal")),
+                    Boolean.parseBoolean(properties.getProperty("drive_system.right_turn_signal")));
             surroundSystem.setLeftLineDistance(0.1);
 
             kieSession.insert(surroundSystem);
             kieSession.insert(driveSystem);
 
+            // Paralelni thread za simulaciju brzine
             simulationThread = new Thread(() -> {
-                List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
+                List<Double> ownCarSpeed = LoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
                 try {
                     int size = ownCarSpeed.size();
                     int i = size;
