@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Math.abs;
 
@@ -61,12 +62,15 @@ public class LineAssistService {
 
             // Paralelni thread za simulaciju brzine
             simulationThread = new Thread(() -> {
+                List<Double> ownCarSpeed = TemplateLoadingUtility.loadDataFromCSV("testCases/speedValues/values_30_to_40.csv");
                 try {
+                    int size = ownCarSpeed.size();
+                    int i = size;
                     while (running) {
-                        double currentSpeed = 80 * Math.sin(System.currentTimeMillis());
-                        kieSession.insert(new CurrentSpeedEvent(abs(currentSpeed), new Date()));
+                        kieSession.insert(new CurrentSpeedEvent(ownCarSpeed.get(i % size), new Date()));
                         kieSession.fireAllRules();
                         Thread.sleep(1000);
+                        i++;
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

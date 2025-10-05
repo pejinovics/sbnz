@@ -2,11 +2,14 @@ package com.ftn.service;
 
 import com.ftn.model.AirCondition;
 import com.ftn.util.KnowledgeSessionHelper;
+import com.ftn.utils.TemplateLoadingUtility;
 import com.ftn.utils.WebSocketRuleNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AirConditionService {
@@ -30,7 +33,7 @@ public class AirConditionService {
             airCondition.setDesiredTemp(25.0);
 
             FactHandle handle = kSession.insert(airCondition);
-            double[] temps = {22.0, 24.0, 25.0, 27.0, 26.0, 25.0};
+            List<Double> temps = TemplateLoadingUtility.loadDataFromCSV("testCases/airConditionTestData1.csv");
 
             for (double t : temps) {
                 airCondition.setMeasuredTemp(t);
